@@ -26,6 +26,7 @@ public class PlayerMovement : MonoBehaviour {
 	{
 		if (Input.GetKeyDown (KeyCode.G)) {//G for GAMEPAD
 			isInDirectMode = !isInDirectMode;
+			Destination = transform.position;
 		}
 
 		if (isInDirectMode) {

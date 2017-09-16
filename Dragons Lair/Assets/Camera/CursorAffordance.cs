@@ -8,7 +8,7 @@ public class CursorAffordance : MonoBehaviour {
 [SerializeField] private Texture2D FightCursor = null;
 [SerializeField] private Texture2D invalidCursor = null;
 
-[SerializeField] Vector2 cursorHotspot = new Vector2(96, 96);
+[SerializeField] Vector2 cursorHotspot = new Vector2(0, 0);
 
  private CameraRaycaster Click;
 	
