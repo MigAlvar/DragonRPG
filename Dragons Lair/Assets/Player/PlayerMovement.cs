@@ -12,7 +12,7 @@ public class PlayerMovement : MonoBehaviour {
 	private bool isInDirectMode = false;
 	private CameraRaycaster targeting;
 	private ThirdPersonCharacter m_character;
-	private Vector3 Destination;
+	private Vector3 Destination, clickPoint;
 
 	// Use this for initialization
 	void Start () {
@@ -50,10 +50,12 @@ public class PlayerMovement : MonoBehaviour {
 
 	private void processMouseMovement ()
 	{
+		clickPoint = targeting.Hit.point;
 		if (Input.GetMouseButtonDown (0)) {
 			switch (targeting.layerHit) {
 			case Layer.Walkable:
-				Destination = targeting.Hit.point;
+				Destination = clickPoint;
+				Destination = ShortenedDestination(clickPoint, moveStopRadius);
 				break;
 			case Layer.Enemy:
 				print ("shooting");
@@ -62,12 +64,30 @@ public class PlayerMovement : MonoBehaviour {
 				return;
 			}
 		}
+		WalktoDestination ();
+	}
+
+	void WalktoDestination ()
+	{
 		// to stop character from rotating on self
-		if (Destination.magnitude >= moveStopRadius) {
+		if (Destination.magnitude >= 0) {
 			m_character.Move (Destination - transform.position, false, false);
 		}
 		else {
 			m_character.Move (Vector3.zero, false, false);
 		}
+	}
+
+	private Vector3 ShortenedDestination (Vector3 destin, float shorten)
+	{
+		Vector3 reductionVector = (Destination - transform.position).normalized * shorten;
+		return destin - reductionVector;
+	}
+
+	private void OnDrawGizmos(){
+		Gizmos.color = Color.black;
+		Gizmos.DrawLine(transform.position, Destination); 
+		Gizmos.DrawSphere(Destination, 0.1f);
+		Gizmos.DrawSphere(clickPoint, 0.075f);
 	}
 }
